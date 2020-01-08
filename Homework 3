@@ -1,0 +1,203 @@
+/*
+*Compiled with G++
+*Calculates the odds for a person winning a duel and calculates the amounts of wins they have. 
+*I go help from the pdf and the Piazza for getting my output correct. 
+*/
+
+#include <iostream>
+#include <stdlib.h>
+#include <assert.h>
+#include <ctime>
+using namespace std;
+
+
+//Objects
+bool A_alive = true;
+bool B_alive = true;
+bool C_alive = true;
+const int NUMBER_DUELS = 10000;
+const int A_ACCURACY = 33;
+const int B_ACCURACY = 50;
+const int C_ACCURACY = 100;
+const int PERCENT = 100;
+double A_WINS = 0;
+double B_WINS = 0;
+double C_WINS = 0;
+
+//Boolean at_least_two_alive
+bool(at_least_two_alive(bool A_alive, bool B_alive, bool C_alive)) {
+	return 	(A_alive && B_alive) || (A_alive && C_alive) || (B_alive && C_alive)/;
+}
+
+void Aaron_shoots1(bool& B_alive, bool& C_alive) {
+	int shot;
+	shot = rand() % 100;
+	if (shot <= A_ACCURACY) {
+		if (C_alive) {
+			C_alive = false;
+		}
+		else {
+			B_alive = false;
+		}
+	}
+}
+void Bob_shoots(bool& A_alive, bool& C_alive) {
+	double shot;
+	shot = rand() % 100;
+	if (shot <= B_ACCURACY) {
+		if (C_alive) {
+			C_alive = false;
+		}
+		else {
+			A_alive = false;
+		}
+	}
+}
+void Charlie_shoots(bool& B_alive, bool& A_alive) {
+		if (B_alive) {
+			B_alive = false;
+		}
+		else {
+			A_alive = false;
+		}
+}
+void Aaron_shoots2(bool& B_alive, bool& C_alive) {
+	double shot;
+	int a = 0;
+	shot = rand() % 100;
+	if (B_alive && C_alive && a < 1) {
+		a++;
+	}
+	else if (B_alive) {
+		if (shot <= 33) {
+			B_alive = false;
+		}
+}
+	else if (C_alive) {
+		if (shot <= 33) {
+			C_alive = false;
+		}
+	}
+
+}
+void test_at_least_two_alive(void) {
+	cout << "\nUnit Testing 1: Function - at_least_two_alive() \n";
+	//Case 1
+	cout << "   Case 1: Aaron alive, Bob alive, Charlie alive\n";
+	assert(true == at_least_two_alive(true, true, true));
+	cout << "   Case passed ...\n";
+	//Case 2
+	cout << "   Case 2: Aaron dead, Bob alive, Charlie alive\n";
+	assert(true == at_least_two_alive(false, true, true));
+	cout << "   Case passed ...\n";
+	//Case 3
+	cout << "   Case 3: Aaron alive, Bob dead, Charlie alive\n";
+	assert(true == at_least_two_alive(true, false, true));
+	cout << "   Case passed ...\n";
+	//Case 4
+	cout << "   Case 4: Aaron alive, Bob alive, Charlie dead\n";
+	assert(true == at_least_two_alive(true, true, false));
+	cout << "   Case passed ...\n";
+
+	//Case 5
+	cout << "   Case 5: Aaron dead, Bob dead, Charlie alive\n";
+	assert(false == at_least_two_alive(false, false, true));
+	cout << "   Case passed ...\n";
+
+	//Case 6
+	cout << "   Case 6: Aaron dead, Bob alive, Charlie dead\n";
+	assert(false == at_least_two_alive(false, true, false));
+	cout << "   Case passed ...\n";
+  
+	//Case 7
+	cout << "   Case 7: Aaron alive, Bob dead, Charlie dead\n";
+	assert(false == at_least_two_alive(true, false, false));
+	cout << "   Case passed ...\n";
+  
+	//Case 8
+	cout << "   Case 8: Aaron dead, Bob dead, Charlie dead\n";
+	assert(false == at_least_two_alive(false, false, false));
+	cout << "   Case passed ...\n";
+}
+
+int main() {
+	srand(time(0));
+	cout << "*** Welcome to the Duel Simulator ***";
+	test_at_least_two_alive();
+	cout << "Press Enter to continue...";
+	cin.get();
+	cout << "Ready to test strategy 1 (run 10000 times):\n";
+	cout << "Press Enter to continue...";
+	cin.get();
+
+	for (int i = 0; i < NUMBER_DUELS; i++) {
+		while (at_least_two_alive(A_alive, B_alive, C_alive)) {
+			if (A_alive) {
+				Aaron_shoots1(B_alive, C_alive);
+			}
+			if (B_alive) {
+				Bob_shoots(A_alive, C_alive);
+			}
+			if (C_alive) {
+				Charlie_shoots(B_alive, A_alive);
+			}
+	}
+	if (A_alive) {
+		A_WINS++;
+		}
+	if (B_alive) {
+		B_WINS++;
+	}
+	if (C_alive) {
+		C_WINS++;
+	}
+	A_alive = true;
+	B_alive = true;
+	C_alive = true;
+	}
+	
+	cout << "Aaron won " << A_WINS << "/ 10000 duels or " << (A_WINS / NUMBER_DUELS) * PERCENT << "%";
+	cout << "\nBob won " << B_WINS << " / 10000 duels or " << (B_WINS / NUMBER_DUELS) * PERCENT << "%";
+	cout << "\nCharlie won " << C_WINS << " / 10000 duels or " << (C_WINS / NUMBER_DUELS) * PERCENT << "%" << endl;
+
+	cout << "\nReady to test strategy 2 (run 10000 times):" << endl;
+	cout << "Press Enter to continue...";
+	cin.get();
+
+	double A_WINS2, B_WINS2, C_WINS2;
+
+	for (int h = 0; h < NUMBER_DUELS; h++) {
+		while (at_least_two_alive(A_alive, B_alive, C_alive)) {
+			if (A_alive) {
+				Aaron_shoots2(B_alive, C_alive);
+			}
+			if (B_alive) {
+				Bob_shoots(A_alive, C_alive);
+			}
+			if (C_alive) {
+				Charlie_shoots(B_alive, A_alive);
+			}
+		}
+		if (A_alive) {
+			A_WINS2++;
+		}
+		if (B_alive) {
+			B_WINS2++;
+		}
+		if (C_alive) {
+			C_WINS2++;
+		}
+		A_alive = true;
+		B_alive = true;
+		C_alive = true;
+	}
+	cout << "Aaron won " << A_WINS2 << "/10000 duels or " << (A_WINS2 / NUMBER_DUELS) * PERCENT << "%";
+	cout << "\nBob won " << B_WINS2 << "/10000 duels or " << (B_WINS2 / NUMBER_DUELS) * PERCENT << "%";
+	cout << "\nCharlie won " << C_WINS2 << "/10000 duels or " << (C_WINS2 / NUMBER_DUELS) * PERCENT << "%" << endl;
+	if (A_WINS > A_WINS2) {
+		cout << "\nStrategy 1 is better than strategy 2." << endl;
+	}
+	if (A_WINS2 > A_WINS) {
+		cout << "\nStragey 2 is better than stragey 1." << endl;
+	}
+}
