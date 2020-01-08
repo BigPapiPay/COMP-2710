@@ -1,0 +1,23 @@
+//The program calculates the fatal amount of diet coke
+//I recieved no help at all. I am a genius
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+double mWeight, hWeight, sweetener;
+const double fraction = 0.001;
+
+int main() {
+	cout << "Please input the weight of the mouse in kg" << endl;
+	cin >> mWeight;
+  
+	cout << "Please input the fatal amount of sweetner for mouse in kg" << endl;
+	cin >> sweetener;
+  
+	cout << "Please input the weight of your dear friend in kg" << endl;
+	cin >> hWeight;
+
+	double FAH = ((sweetener * hWeight) / (mWeight * fraction));
+	cout << "The fatal amount of Coke for your friend is: " << FAH << " kg" << endl;
+}
