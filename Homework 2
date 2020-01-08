@@ -1,0 +1,81 @@
+//Compiled my code using g++. Calculates the number of months that it takes to pay off a loan.
+//I used the notes on break and continue to fix my while loop. 
+
+#include <iostream>
+using namespace std;
+
+double loanAmount = 0;
+double interestRate = 0;
+double monthlyPayments = 0;
+int months = 0;
+double totalInterest = 0;
+double principal;
+double balance;
+double interest;
+double mInterestRate = 0;
+double payment;
+double inter = 0;
+
+int main(){
+	cout << "Loan Amount: ";
+	cin >> loanAmount;
+	cout << "Interest Rate (% per year): ";
+	cin >> interestRate;
+	cout << "Monthly Payments: ";
+	cin >> monthlyPayments;
+
+	cout.setf(ios::fixed);
+	cout.setf(ios::showpoint);
+	cout.precision(2);
+
+	balance = loanAmount;
+	mInterestRate = interestRate / 12;
+	inter = mInterestRate * balance / 100;
+
+	if (monthlyPayments > inter) {
+		cout << "\n******************************************************" << endl;
+		cout << "\tAmortization Table" << endl;
+		cout << "******************************************************" << endl;
+		cout << "Month\tBalance\tPayment\tRate\tInterest  Principal" << endl;
+		cout << "0\t$" << balance << " N/A\tN/A\tN/A\tN/A" << endl;
+	}
+	while (balance >= 0.0) {
+		if (balance <= monthlyPayments) {
+			interest = balance * (mInterestRate / 100);
+			principal = balance;
+			balance = 0;
+			monthlyPayments = principal + interest;
+			totalInterest = totalInterest + interest;
+			months++;
+			cout << months << "\t$" << balance << "\t$" << monthlyPayments << "\t";
+			cout.unsetf(ios::fixed);
+			cout << mInterestRate;
+			cout.setf(ios::fixed);
+			cout.precision(2);
+			cout << "\t$" << interest << "\t  $" << principal << endl;
+			break;
+		}
+		interest = balance * (mInterestRate / 100);
+    
+		if (monthlyPayments > interest) {
+			principal = monthlyPayments - interest;
+			balance -= principal;
+			totalInterest += interest;
+
+			months++;
+			cout << months << "\t$" << balance << "\t$" << monthlyPayments << "\t";
+			cout.unsetf(ios::fixed);
+			cout << mInterestRate;
+			cout.setf(ios::fixed);
+			cout.precision(2);
+			cout << "\t$" << interest << "\t  $" << principal << endl;
+		}
+		else {
+			cout << "Regular monthly payment is not enough. Increase your regular monthly payment." << endl;
+			return 0;
+		}
+	}
+	cout << "******************************************************\n";
+	cout << "\nIt takes " << months << " months to pay off the loan.";
+	cout << "\nTotal interest paid is: $" << totalInterest << endl;
+}
