@@ -1,0 +1,206 @@
+/*
+*Compiled using G++. 
+*Trivia game that allows users to see an debugging of the code and final product form of the code. 
+*Discussed concepts with Brantley Webb, Michael McMeen and Drew Gardino about how to fix errors in my addTrivia method and in my mains. 
+*
+*/
+
+#include <iostream>
+#include <string>
+#include <cassert>
+#include <cstdlib>
+
+using namespace std;
+
+//Step 1
+//Creates a structure for a TriviaNode. 
+struct trivia_Node {
+	string t_question;
+	string t_answer;
+	int award_points;
+	trivia_Node* trivia_Node_Next;
+};
+
+//Step 2
+//Initialize a linked list. 
+class TriviaList {
+public: 
+	int node_count;
+	trivia_Node *head, *root;
+	TriviaList() {
+		node_count = 0;
+		head = NULL;
+		root = NULL;
+	}
+	
+};
+
+//Step 3
+//Initializing the different nodes for triva nodes. 
+void initialize_Trivia_Node(TriviaList &n) {
+
+	trivia_Node *question_1 = new trivia_Node;
+	trivia_Node *question_2 = new trivia_Node;
+	trivia_Node *question_3 = new trivia_Node;
+
+	//Defining question 1.
+	question_1->t_question = "How long was the shortest war on record? (Hint: how many minutes)";
+	question_1->t_answer = "38";
+	question_1->award_points = 100;
+	question_1->trivia_Node_Next = question_2;
+
+	//Defining question 2.
+	question_2->t_question = "What was Bank of America's original name? (Hint: Bank of Italy or Bank of Germany)";
+	question_2->t_answer = "Bank of Italy";
+	question_2->award_points = 50;
+	question_2->trivia_Node_Next = question_3;
+
+	//Defining question 3.
+	question_3->t_question = "What is the best selling video game of all time? (Hint: Minecraft or Tetris)";
+	question_3->t_answer = "Tetris";
+	question_3->award_points = 20;
+	question_3 -> trivia_Node_Next = NULL;
+
+	//List stuff. 
+	n.head = question_1;
+	n.root = question_3;
+	n.node_count += 3;
+}
+
+//Step 4.
+//Adding a new Trivia Node. 
+void add_TQuestion(TriviaList &n) {
+	trivia_Node *newTrivia = new trivia_Node;
+	
+	//Getting the input of the new trivia question. 
+	cout << "Enter a question: ";
+	getline(cin, newTrivia -> t_question);
+	cout << "Enter a answer: ";
+	getline(cin, newTrivia -> t_answer);
+	cout << "Enter award points: ";
+	cin >> newTrivia -> award_points;
+
+	//Reassigning the end of the list. 
+	n.root -> trivia_Node_Next = newTrivia;
+	n.root = newTrivia;
+	n.node_count++;
+
+	//Checks to make sure new trivia node was created. 
+	if (newTrivia == NULL) {
+		exit(0);
+	}
+}
+
+//Step 5. 
+//Asking the user a question. 
+int askTrivia(TriviaList n, int i, int &total_points) {
+	trivia_Node *current_Node = n.head;
+	string user_response;
+
+	//Checking for parameter failures. 
+	if (i < 1) {
+		cout << "Warning - The number of trivia to be asked must be equal to or larger than 1." << endl;
+		return 1;
+	}
+	if (i > n.node_count) {
+		cout << "Warning - There are only " << n.node_count << " trivia in the list." << endl;
+		i = n.node_count;
+		return 1;
+	}
+	total_points = 0;
+
+	//Asking the questions. 
+	for (int a = 0; a < i; a++) {
+		cout << "Question: " << current_Node -> t_question << endl;
+		cout << "Answer: ";
+		getline(cin, user_response);
+		if (current_Node -> t_answer == user_response) {
+			cout << "Your answer is correct. You recieve " << current_Node->award_points << " points." << endl;
+			total_points += current_Node->award_points;
+		}
+		else {
+			cout << "Your answer is wrong. The correct answer is: " << current_Node->t_answer << endl;
+		}
+		cout << "Your total points: " << total_points << endl << "\n";
+		current_Node = current_Node->trivia_Node_Next;
+	}
+	return 0;
+}
+
+//Step 6. 
+//Unit testing 
+	void test_askTrivia() {
+		TriviaList n;
+		int total_points;
+
+		initialize_Trivia_Node(n);
+
+		//Case 1
+		cout << "Unit Test Case 1: Ask no questions. The program should give a warning message." << endl;
+		assert(1 == askTrivia(n, 0, total_points));
+		cout << "\nCase 1 passed..." << endl;
+
+		//Case 2.1
+		cout << "\nUnit Test Case 2.1: Ask 1 question in the linked list. The tester enters an incorrect answer." << endl;
+		assert(0 == askTrivia(n, 1, total_points));
+		assert(total_points == 0);
+		cout << "Case 2.1 passed..." << endl;
+
+		//Case 2.2
+		cout << "\nUnit Test Case 2.2: Ask 1 question in the linked list. The tester enters a correct answer." << endl;
+		assert(0 == askTrivia(n, 1, total_points));
+		assert(100 == total_points);
+		cout << "Case 2.2 passed..." << endl;
+
+		//Case 3.1
+		cout << "\nUnit Test Case 3.1: Ask all the questions from the list. The tester enters all correct answers" << endl;
+		assert(0 == askTrivia(n, 3, total_points));
+		assert(170 == total_points);
+		cout << "Case 3.1 passed..." << endl;
+
+		//Case 3.2
+		cout << "\nUnit Test Case 3.2: Ask all questions from the list. The tester enters all incorrect answers" << endl;
+		assert(0 == askTrivia(n, 3, total_points));
+		assert(0 == total_points);
+		cout << "Case 3.2 passed..." << endl;
+		
+		//Case 4
+		cout << "\nUnit Test Case 4: Ask five questions in the linked list." << endl;
+		assert(1 == askTrivia(n, 5, total_points));
+		assert(0 == total_points);
+		cout << "\nCase 4 passed..." << endl;
+	}
+
+//Step 7.
+//Main function. 
+
+#ifdef UNIT_TESTING
+		int main() {
+			//Debug version
+			cout << "*** This is a debug version ***" << endl;
+			test_askTrivia();
+			cout << "\n*** End of the debug version ***" << endl;
+		}
+#else
+		int main() {
+			//Production Version
+			TriviaList production_v1;
+			string response;
+			int total_points;
+			bool running = true;
+			cout << "*** Welcome to Payton's trivia quiz game ***" << endl;
+			initialize_Trivia_Node(production_v1);
+			do {
+				add_TQuestion(production_v1);
+				cout << "Continue? (Yes/No): ";
+				cin >> response;
+				cin.ignore();
+				if (response == "no" || response == "n" || response == "NO" || response == "No") {
+					running = false;
+				}
+			} while (running);
+			cout << "\n";
+
+			askTrivia(production_v1, production_v1.node_count, total_points);
+			cout << "*** Thank you for playing the trivia quiz game. Goodbye! ***" << endl;
+		}
