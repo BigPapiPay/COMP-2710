@@ -95,3 +95,79 @@ void writefile(int outputArray[], int outputArray_size) {
 	}
 	outStream1.close();
 }
+/* Main method. */ 
+int main() {
+
+	ifstream inStream1;
+	ofstream outStream;
+	int iArray1[MAX_SIZE];
+	int iArray1_size;
+	int iArray2[MAX_SIZE];
+	int iArray2_size;
+	int outArray[MAX_SIZE];
+	int outArray_Size;
+	string int1 = "";
+	string int2 = "";
+	string out1 = "";
+
+	//Beginnning of the output
+	cout << "*** Welcome to Payton Davis's sorting program ***" << endl;
+	
+	//First input Array Setup
+	cout << "Enter the first input file name: ";
+	cin >> int1;
+
+	inStream1.open((char*) int1.c_str());
+	cout << "";
+	if (inStream1.fail()) {
+		exit(1);
+	}
+	
+	iArray1_size = readFile(iArray1, inStream1);
+	inStream1.close();
+	
+	cout << "The list of " << iArray1_size << " numbers in the file " << int1 << " is:" << endl;
+	/*	while (!inStream1.eof()) {
+		cout << data << endl;
+		inStream1 >> data;
+		}*/
+	for (int i = 0; i < iArray1_size; i++) {
+		cout << iArray1[i] << endl;
+	}
+	cout << "\n";
+
+
+	//Second input Array Setup
+	cout << "Enter the second input file name: ";
+	cin >> int2;
+
+	inStream1.open((char*)int2.c_str());
+	cout << "";
+	
+	iArray2_size = readFile(iArray2, inStream1);
+	if (iArray2_size < 0) {
+		exit(1);
+	}
+	inStream1.close();
+	cout << "The list of " << iArray2_size << " numbers in the file " << int2 << " is:" << endl;
+	/*while (!inStream1.eof()) {
+		cout << data << endl;
+		inStream1 >> data;
+	}*/
+	for (int i = 0; i < iArray2_size; i++) {
+		cout << iArray2[i] << endl;
+	}
+	cout << "\n";
+
+	//Output  Array Setup 
+	outArray_Size = sort(iArray1, iArray1_size, iArray2, iArray2_size, outArray);
+
+	cout << "The sorted list of " << outArray_Size << " numbers is: ";
+	for (int k = 0; k < outArray_Size; k++) {
+		cout << outArray[k];
+		cout << " ";
+	}
+
+	writefile(outArray, outArray_Size);
+	cout << endl;
+}
